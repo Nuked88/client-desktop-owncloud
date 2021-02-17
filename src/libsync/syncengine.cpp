@@ -411,7 +411,7 @@ void OCC::SyncEngine::slotItemDiscovered(const OCC::SyncFileItemPtr &item)
 
 void SyncEngine::startSync()
 {
-    if (s_anySyncRunning || _syncRunning) {
+    if (_syncRunning) {
         OC_ASSERT(false);
         return;
     }
