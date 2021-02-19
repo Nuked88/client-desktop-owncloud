@@ -64,19 +64,17 @@ private:
     QBitArray hashBits;
 };
 
-class SocketListener
+class SocketListener : public QObject
 {
+    Q_OBJECT
 public:
     QPointer<QIODevice> socket;
 
-    explicit SocketListener(QIODevice *socket)
-        : socket(socket)
+    explicit SocketListener(QIODevice *_socket)
+        : QObject(_socket)
+        , socket(_socket)
     {
     }
-
-    void sendMessage(const QString &message, bool doWait = false) const;
-    void sendMessage(const QString &function, const QJsonObject &obj, bool doWait = false) const;
-
     void sendMessageIfDirectoryMonitored(const QString &message, uint systemDirectoryHash) const
     {
         if (_monitoredDirectoriesBloomFilter.isHashMaybeStored(systemDirectoryHash))
@@ -89,7 +87,11 @@ public:
     }
 
 private:
+    void sendMessage(const QString &message, bool doWait) const;
+    void sendMessage(const QString &function, const QJsonObject &obj, bool doWait) const;
+
     BloomFilter _monitoredDirectoriesBloomFilter;
+    friend class SocketApi;
 };
 
 class ListenerClosure : public QObject
@@ -124,23 +126,17 @@ public:
     {
     }
 
-    void resolve(const QString &response = QString())
-    {
-        _socketListener->sendMessage(QLatin1String("RESOLVE|") + _jobId + '|' + response);
-    }
+    void resolve(const QString &response = QString());
 
     void resolve(const QJsonObject &response) { resolve(QJsonDocument { response }.toJson()); }
 
     const QJsonObject &arguments() { return _arguments; }
 
-    void reject(const QString &response)
-    {
-        _socketListener->sendMessage(QLatin1String("REJECT|") + _jobId + '|' + response);
-    }
+    void reject(const QString &response);
 
 private:
     QString _jobId;
-    SocketListener *_socketListener;
+    QPointer<SocketListener> _socketListener;
     QJsonObject _arguments;
 };
 }

@@ -35,7 +35,7 @@ public:
     void finish(const QString &error);
 
 private:
-    SocketListener *_listener;
+    QPointer<SocketListener> _listener;
     QString _localPath;
     QString _remotePath;
     QString _pattern;

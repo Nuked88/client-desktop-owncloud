@@ -51,6 +51,9 @@ class SocketApi : public QObject
     Q_OBJECT
 
 public:
+    static void sendMessage(SocketListener *listener, const QString &message, bool doWait = false);
+    static void sendMessage(SocketListener *listener, const QString &function, const QJsonObject &obj, bool doWait = false);
+
     explicit SocketApi(QObject *parent = nullptr);
     ~SocketApi() override;
 
@@ -156,7 +159,7 @@ private:
     QString buildRegisterPathMessage(const QString &path);
 
     QSet<QString> _registeredAliases;
-    QList<SocketListener> _listeners;
+    QMap<QIODevice *, SocketListener *> _listeners;
     SocketApiServer _localServer;
 };
 }
