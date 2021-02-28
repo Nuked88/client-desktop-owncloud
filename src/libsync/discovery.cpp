@@ -26,7 +26,7 @@
 #include "common/checksums.h"
 #include "csync_exclude.h"
 #include "csync.h"
-
+#include "configfile.h"
 
 namespace OCC {
 
@@ -182,6 +182,14 @@ void ProcessDirectoryJob::process()
 
 bool ProcessDirectoryJob::handleExcluded(const QString &path, const QString &localName, bool isDirectory, bool isHidden, bool isSymlink)
 {
+    ConfigFile cfgFile;
+
+    auto newFileLimit = cfgFile.newBigFileSizeLimit();
+    int maxSize = newFileLimit.first ? newFileLimit.second * 1000LL * 1000LL : -1; // convert from MB to B
+
+    QString path2 = path;
+    QFileInfo fi(path2);
+
     auto excluded = _discoveryData->_excludes->traversalPatternMatch(path, isDirectory ? ItemTypeDirectory : ItemTypeFile);
 
     // FIXME: move to ExcludedFiles 's regexp ?
@@ -201,6 +209,11 @@ bool ProcessDirectoryJob::handleExcluded(const QString &path, const QString &loc
         isInvalidPattern = true;
     }
 
+    //Not upload file if size is over the limit in settings
+    if (fi.size() > maxSize) {
+      
+        excluded = CSYNC_FILE_SILENTLY_EXCLUDED;
+    }
     auto localCodec = QTextCodec::codecForLocale();
     if (!OCC::Utility::isWindows() && localCodec->mibEnum() != 106) {
         // If the locale codec is not UTF-8, we must check that the filename from the server can
