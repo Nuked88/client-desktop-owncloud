@@ -178,7 +178,7 @@ void ProcessDirectoryJob::process()
 
          ConfigFile cfgFile;
 
-        QString path2 = path;
+        QString path2 = path._target;
         QFileInfo fi(path2);
         auto newFileLimit = cfgFile.newBigFileSizeLimit();
         int maxSize = newFileLimit.first ? newFileLimit.second * 1000LL * 1000LL : -1; // convert from MB to B
