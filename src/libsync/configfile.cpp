@@ -717,8 +717,8 @@ QPair<bool, qint64> ConfigFile::newBigFileSizeLimit() const
 
 void ConfigFile::setNewBigFileSizeLimit(bool isChecked, qint64 mbytes)
 {
-    setValue(newBigFileSizeLimitC, mbytes);
-    setValue(useNewBigFileSizeLimitC, isChecked);
+    setValue(newBigFileSizeLimitC(), mbytes);
+    setValue(useNewBigFileSizeLimitC(), isChecked);
 }
 
 

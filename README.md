@@ -8,6 +8,11 @@
 The ownCloud Desktop Client is a tool to synchronize files from ownCloud Server
 with your computer.
 
+## :heart: :heart: :heart: My Changes 
+
+I decided to implement a new feature where is possible to choose the max size of the upload file by client-side.
+Just go in settings and you will find "Ignore file larger than".
+
 ## Download
 
 ### Binary packages
