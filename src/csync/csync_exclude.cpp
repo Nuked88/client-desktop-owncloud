@@ -358,8 +358,6 @@ bool ExcludedFiles::isExcluded(
     //Not upload file if size is over the limit in settings
     if (fi.size() > maxSize) {
         //  qCDebug(lcCSyncVIOLocal2) << "Skipped big file. Size: " << fi.size();
-
-        fi.type = ItemTypeSkip;
         type = ItemTypeSkip;
         return true;
     }
