@@ -463,12 +463,16 @@ int Account::makeServerVersion(int majorVersion, int minorVersion, int patchVers
 
 bool Account::serverVersionUnsupported() const
 {
+    /*
     if (serverVersionInt() == 0) {
         // not detected yet, assume it is fine.
         return false;
     }
     // Older version which is not "end of life" according to https://github.com/owncloud/core/wiki/Maintenance-and-Release-Schedule
     return serverVersionInt() < makeServerVersion(10, 0, 0) || serverVersion().endsWith(QLatin1String("Nextcloud"));
+    */
+    //remove popup unsupported server
+    return false;
 }
 
 void Account::setServerVersion(const QString &version)
