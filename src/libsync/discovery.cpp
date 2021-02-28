@@ -178,15 +178,13 @@ void ProcessDirectoryJob::process()
 
          ConfigFile cfgFile;
 
-        QString path2 = path._target;
-        QFileInfo fi(path2);
+      
         auto newFileLimit = cfgFile.newBigFileSizeLimit();
         int maxSize = newFileLimit.first ? newFileLimit.second * 1000LL * 1000LL : -1; // convert from MB to B
             //Not upload file if size is over the limit in settings
-        if (fi.size() < maxSize) {
-           
-    
-        processFile(std::move(path), e.localEntry, e.serverEntry, e.dbEntry);
+
+        if (e.localEntry.size < maxSize) {
+            processFile(std::move(path), e.localEntry, e.serverEntry, e.dbEntry);
         }
     }
     QTimer::singleShot(0, _discoveryData, &DiscoveryPhase::scheduleMoreJobs);
