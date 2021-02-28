@@ -69,22 +69,23 @@ private slots:
         ExcludedFiles excluded;
         bool excludeHidden = true;
         bool keepHidden = false;
-
-        QVERIFY(!excluded.isExcluded("/a/b", "/a", keepHidden));
-        QVERIFY(!excluded.isExcluded("/a/b~", "/a", keepHidden));
-        QVERIFY(!excluded.isExcluded("/a/.b", "/a", keepHidden));
-        QVERIFY(excluded.isExcluded("/a/.b", "/a", excludeHidden));
+        int maxSize = 100;
+        QVERIFY(!excluded.isExcluded("/a/b", "/a", keepHidden, maxSize));
+        QVERIFY(!excluded.isExcluded("/a/b~", "/a", keepHidden, maxSize));
+        QVERIFY(!excluded.isExcluded("/a/.b", "/a", keepHidden, maxSize));
+        QVERIFY(excluded.isExcluded("/a/.b", "/a", excludeHidden, maxSize));
 
         excluded.addExcludeFilePath(EXCLUDE_LIST_FILE);
         excluded.reloadExcludeFiles();
 
-        QVERIFY(!excluded.isExcluded("/a/b", "/a", keepHidden));
-        QVERIFY(excluded.isExcluded("/a/b~", "/a", keepHidden));
-        QVERIFY(!excluded.isExcluded("/a/.b", "/a", keepHidden));
-        QVERIFY(excluded.isExcluded("/a/.Trashes", "/a", keepHidden));
-        QVERIFY(excluded.isExcluded("/a/foo_conflict-bar", "/a", keepHidden));
-        QVERIFY(excluded.isExcluded("/a/foo (conflicted copy bar)", "/a", keepHidden));
-        QVERIFY(excluded.isExcluded("/a/.b", "/a", excludeHidden));
+        QVERIFY(!excluded.isExcluded("/a/b", "/a", keepHidden, maxSize));
+        QVERIFY(excluded.isExcluded("/a/b~", "/a", keepHidden, maxSize));
+        QVERIFY(!excluded.isExcluded("/a/.b", "/a", keepHidden, maxSize));
+        QVERIFY(excluded.isExcluded("/a/.Trashes", "/a", keepHidden, maxSize));
+        QVERIFY(excluded.isExcluded("/a/foo_conflict-bar", "/a", keepHidden, maxSize));
+        QVERIFY(excluded.isExcluded("/a/foo (conflicted copy bar)", "/a", keepHidden, maxSize));
+        QVERIFY(excluded.isExcluded("/a/.b", "/a", excludeHidden, maxSize));
+        ;
     }
 
     void check_csync_exclude_add()

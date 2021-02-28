@@ -187,6 +187,11 @@ void SelectiveSyncWidget::recursiveInsert(QTreeWidgetItem *parent, QStringList p
 
 void SelectiveSyncWidget::slotUpdateDirectories(QStringList list)
 {
+    ConfigFile cfgFile;
+
+    auto newFileLimit = cfgFile.newBigFileSizeLimit();
+    int maxSize = newFileLimit.first ? newFileLimit.second * 1000LL * 1000LL : -1; // convert from MB to B
+
     auto job = qobject_cast<LsColJob *>(sender());
     QScopedValueRollback<bool> isInserting(_inserting);
     _inserting = true;
@@ -206,7 +211,7 @@ void SelectiveSyncWidget::slotUpdateDirectories(QStringList list)
     QMutableListIterator<QString> it(list);
     while (it.hasNext()) {
         it.next();
-        if (_excludedFiles.isExcluded(it.value(), pathToRemove, FolderMan::instance()->ignoreHiddenFiles()))
+        if (_excludedFiles.isExcluded(it.value(), pathToRemove, FolderMan::instance()->ignoreHiddenFiles(), maxSize))
             it.remove();
     }
 

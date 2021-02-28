@@ -317,15 +317,18 @@ bool ExcludedFiles::versionDirectiveKeepNextLine(const QByteArray &directive) co
 bool ExcludedFiles::isExcluded(
     const QString &filePath,
     const QString &basePath,
-    bool excludeHidden) const
+    bool excludeHidden,
+    int maxSize) const
 {
     if (!filePath.startsWith(basePath, Utility::fsCasePreserving() ? Qt::CaseInsensitive : Qt::CaseSensitive)) {
         // Mark paths we're not responsible for as excluded...
         return true;
     }
 
+    QString path = filePath;
+    QFileInfo fi(path);
+
     if (excludeHidden) {
-        QString path = filePath;
         // Check all path subcomponents, but to *not* check the base path:
         // We do want to be able to sync with a hidden folder as the target.
         while (path.size() > basePath.size()) {
@@ -339,7 +342,13 @@ bool ExcludedFiles::isExcluded(
         }
     }
 
-    QFileInfo fi(filePath);
+ 
+    //Not upload file if size is over the limit in settings
+    if (fi.size() > maxSize && maxSize != -1) {
+        //  qCDebug(lcCSyncVIOLocal2) << "Skipped big file. Size: " << fi.size();
+        return true;
+    }
+
     ItemType type = ItemTypeFile;
     if (fi.isDir()) {
         type = ItemTypeDirectory;

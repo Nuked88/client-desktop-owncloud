@@ -362,6 +362,14 @@ qint64 Theme::newBigFolderSizeLimit() const
     return 500;
 }
 
+
+qint64 Theme::newBigFileSizeLimit() const
+{
+    // Default to 100MB
+    return 100;
+}
+
+
 bool Theme::wizardHideExternalStorageConfirmationCheckbox() const
 {
     return false;

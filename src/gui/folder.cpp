@@ -721,12 +721,21 @@ void Folder::removeFromSettings() const
 
 bool Folder::isFileExcludedAbsolute(const QString &fullPath) const
 {
-    return _engine->excludedFiles().isExcluded(fullPath, path(), _definition.ignoreHiddenFiles);
+    ConfigFile cfgFile;
+
+    auto newFileLimit = cfgFile.newBigFileSizeLimit();
+    int maxSize = newFileLimit.first ? newFileLimit.second * 1000LL * 1000LL : -1; // convert from MB to B
+
+    return _engine->excludedFiles().isExcluded(fullPath, path(), _definition.ignoreHiddenFiles, maxSize);
 }
 
 bool Folder::isFileExcludedRelative(const QString &relativePath) const
 {
-    return _engine->excludedFiles().isExcluded(path() + relativePath, path(), _definition.ignoreHiddenFiles);
+    ConfigFile cfgFile;
+
+    auto newFileLimit = cfgFile.newBigFileSizeLimit();
+    int maxSize = newFileLimit.first ? newFileLimit.second * 1000LL * 1000LL : -1; // convert from MB to B
+    return _engine->excludedFiles().isExcluded(path() + relativePath, path(), _definition.ignoreHiddenFiles, maxSize);
 }
 
 void Folder::slotTerminateSync()

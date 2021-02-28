@@ -86,6 +86,9 @@ const QString useDownloadLimitC() { return QStringLiteral("BWLimit/useDownloadLi
 const QString uploadLimitC() { return QStringLiteral("BWLimit/uploadLimit"); }
 const QString downloadLimitC() { return QStringLiteral("BWLimit/downloadLimit"); }
 
+const QString newBigFileSizeLimitC() { return QStringLiteral("newBigFileSizeLimit"); }
+const QString useNewBigFileSizeLimitC() { return QStringLiteral("useNewBigFileSizeLimit"); }
+
 const QString newBigFolderSizeLimitC() { return QStringLiteral("newBigFolderSizeLimit"); }
 const QString useNewBigFolderSizeLimitC() { return QStringLiteral("useNewBigFolderSizeLimit"); }
 const QString confirmExternalStorageC() { return QStringLiteral("confirmExternalStorage"); }
@@ -701,6 +704,23 @@ void ConfigFile::setDownloadLimit(int kbytes)
 {
     setValue(downloadLimitC(), kbytes);
 }
+
+
+
+QPair<bool, qint64> ConfigFile::newBigFileSizeLimit() const
+{
+    auto defaultValue = Theme::instance()->newBigFileSizeLimit();
+    qint64 value = getValue(newBigFileSizeLimitC(), QString(), defaultValue).toLongLong();
+    bool use = value >= 0 && getValue(useNewBigFileSizeLimitC(), QString(), true).toBool();
+    return qMakePair(use, qMax<qint64>(0, value));
+}
+
+void ConfigFile::setNewBigFileSizeLimit(bool isChecked, qint64 mbytes)
+{
+    setValue(newBigFileSizeLimitC, mbytes);
+    setValue(useNewBigFileSizeLimitC, isChecked);
+}
+
 
 QPair<bool, qint64> ConfigFile::newBigFolderSizeLimit() const
 {

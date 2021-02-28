@@ -266,6 +266,16 @@ public:
      **/
     virtual qint64 newBigFolderSizeLimit() const;
 
+
+
+    
+     /**
+     * Default option for the newBigFileSizeLimit.
+     * Size in MB of the maximum size of file that can be uploaded.
+     * Set -1 to never ask confirmation.  0 to ask confirmation for every file.
+     **/
+    virtual qint64 newBigFileSizeLimit() const;
+
     /**
      * Hide the checkbox that says "Ask for confirmation before synchronizing folders larger than X MB"
      * in the account wizard
