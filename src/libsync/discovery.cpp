@@ -226,7 +226,7 @@ bool ProcessDirectoryJob::handleExcluded(const QString &path, const QString &loc
         if (encoder.fromUnicode(path).contains('\0')) {
             qCWarning(lcDisco) << "Cannot encode " << path << " to local encoding " << localCodec->name();
             excluded = CSYNC_FILE_EXCLUDE_CANNOT_ENCODE;
-        } 
+        }   
     }
 
     if (excluded == CSYNC_NOT_EXCLUDED && !isSymlink) {
