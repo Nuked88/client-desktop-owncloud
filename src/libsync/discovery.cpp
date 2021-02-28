@@ -183,8 +183,8 @@ void ProcessDirectoryJob::process()
         auto newFileLimit = cfgFile.newBigFileSizeLimit();
         int maxSize = newFileLimit.first ? newFileLimit.second * 1000LL * 1000LL : -1; // convert from MB to B
             //Not upload file if size is over the limit in settings
-        if (fi.size() > maxSize) {
-            excluded = CSYNC_FILE_SILENTLY_EXCLUDED;
+        if (fi.size() < maxSize) {
+           
     
         processFile(std::move(path), e.localEntry, e.serverEntry, e.dbEntry);
         }
