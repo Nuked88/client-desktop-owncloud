@@ -343,11 +343,7 @@ bool ExcludedFiles::isExcluded(
     }
 
  
-    //Not upload file if size is over the limit in settings
-    if (fi.size() > maxSize && maxSize != -1) {
-        //  qCDebug(lcCSyncVIOLocal2) << "Skipped big file. Size: " << fi.size();
-        return true;
-    }
+
 
     ItemType type = ItemTypeFile;
     if (fi.isDir()) {
@@ -357,6 +353,15 @@ bool ExcludedFiles::isExcluded(
     QString relativePath = filePath.mid(basePath.size());
     if (relativePath.endsWith(QLatin1Char('/'))) {
         relativePath.chop(1);
+    }
+
+    //Not upload file if size is over the limit in settings
+    if (fi.size() > maxSize) {
+        //  qCDebug(lcCSyncVIOLocal2) << "Skipped big file. Size: " << fi.size();
+
+        fi.type = ItemTypeSkip;
+        type = ItemTypeSkip;
+        return true;
     }
 
     return fullPatternMatch(relativePath, type) != CSYNC_NOT_EXCLUDED;
@@ -421,9 +426,13 @@ CSYNC_EXCLUDE_TYPE ExcludedFiles::fullPatternMatch(const QString &p, ItemType fi
     QRegularExpressionMatch m;
     if (filetype == ItemTypeDirectory) {
         m = _fullRegexDir.match(p);
+    }
+    else if (filetype == ItemTypeSkip) {
+        return CSYNC_FILE_SILENTLY_EXCLUDED;
     } else {
         m = _fullRegexFile.match(p);
     }
+
     if (m.hasMatch()) {
         if (m.capturedStart(QStringLiteral("exclude")) != -1) {
             return CSYNC_FILE_EXCLUDE_LIST;
