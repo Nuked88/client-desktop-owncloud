@@ -176,13 +176,11 @@ void ProcessDirectoryJob::process()
             continue;
         }
 
-         ConfigFile cfgFile;
-
-      
+        ConfigFile cfgFile;  
         auto newFileLimit = cfgFile.newBigFileSizeLimit();
         int maxSize = newFileLimit.first ? newFileLimit.second * 1000LL * 1000LL : -1; // convert from MB to B
-            //Not upload file if size is over the limit in settings
-
+        
+        //Not upload file if size is over the limit in settings
         if (e.localEntry.size < maxSize) {
             processFile(std::move(path), e.localEntry, e.serverEntry, e.dbEntry);
         }
